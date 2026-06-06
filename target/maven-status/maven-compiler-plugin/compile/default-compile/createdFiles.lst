@@ -1,0 +1,2 @@
+com\org73n37\crudapp\infrastructure\security\SecurityAuditorAware.class
+com\org73n37\crudapp\infrastructure\security\ReactiveJwtFilter.class
