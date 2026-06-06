@@ -221,7 +221,7 @@ public class ReactiveJwtFilter implements WebFilter {
     }
 
     private PublicKey getVerificationKey(String token) throws Exception {
-        if (appModeConfig.isDevelopment() && testPublicKeyPem != null && !testPublicKeyPem.trim().isEmpty()) {
+        if (testPublicKeyPem != null && !testPublicKeyPem.trim().isEmpty()) {
             synchronized (testKeyLock) {
                 if (parsedTestPublicKey == null) {
                     parsedTestPublicKey = parsePemPublicKey(testPublicKeyPem);
