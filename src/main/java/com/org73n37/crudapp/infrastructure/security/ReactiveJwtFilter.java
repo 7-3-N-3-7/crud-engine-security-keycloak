@@ -74,8 +74,11 @@ public class ReactiveJwtFilter implements WebFilter {
 
         String path = exchange.getRequest().getURI().getPath();
 
-        // Skip metadata public endpoints and health checks
-        if (path.equals("/api/metadata") || path.startsWith("/health/") || path.equals("/swagger-ui") || path.equals("/api-docs")) {
+        // Skip dashboard, assets, metadata public endpoints and health checks
+        if (path.equals("/dashboard") || path.startsWith("/dashboard/") ||
+            path.startsWith("/css/") || path.startsWith("/js/") ||
+            path.equals("/favicon.ico") || path.endsWith(".css") || path.endsWith(".svg") ||
+            path.equals("/api/metadata") || path.startsWith("/health/") || path.equals("/swagger-ui") || path.equals("/api-docs")) {
             return chain.filter(exchange);
         }
 
