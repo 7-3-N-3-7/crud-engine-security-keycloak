@@ -1,0 +1,20 @@
+@startuml Keycloak Token State Machine
+[*] --> Unverified : Token received in Header
+
+Unverified --> KeyLookUp : Extract kid
+KeyLookUp --> SignatureVerification : Public key resolved (Cache hit/fetch)
+KeyLookUp --> AuthFailed : kid not matching / JWKS fetch error
+
+SignatureVerification --> ClaimsVerification : Signature matches key
+SignatureVerification --> AuthFailed : Signature mismatch / Invalid key
+
+ClaimsVerification --> RoleVerification : Token not expired & tenant extracted
+ClaimsVerification --> AuthFailed : Token expired / invalid claims format
+
+RoleVerification --> Authenticated : User has matching role for resource
+RoleVerification --> AuthForbidden : User lacks required role
+
+Authenticated --> [*] : Security Context Propagated
+AuthFailed --> [*] : 401 Unauthorized Returned
+AuthForbidden --> [*] : 403 Forbidden Returned
+@enduml

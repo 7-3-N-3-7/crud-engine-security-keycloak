@@ -1,0 +1,25 @@
+@startuml Keycloak Entity Relation Diagram
+skinparam linetype ortho
+
+entity "JWT Header" as header {
+  * kid : text
+  * alg : text
+}
+
+entity "JWT Claims" as claims {
+  * sub : text
+  * preferred_username : text
+  * realm_access : JSON
+  * tenant : text
+  * iss : text
+}
+
+entity "CachedPublicKey" as key {
+  * kid : text <<PK>>
+  --
+  * publicKey : RSA_Key
+}
+
+header ||--|| claims : "authenticates payload"
+header ||--o| key : "verified by"
+@enduml

@@ -1,0 +1,53 @@
+@startuml Keycloak Token Verification Sequence
+participant "ReactiveJwtFilter" as Filter
+participant "JWK Cache" as Cache
+participant "Keycloak IAM" as Keycloak
+participant "CrudEngine" as Engine
+
+[-> Filter : filter(exchange, chain)
+activate Filter
+
+alt Public path / options
+  Filter -> [ : pass request (chain.filter)
+end
+
+Filter -> Filter : Extract Bearer token
+alt Token is missing
+  Filter --> [ : Return 401 Unauthorized
+end
+
+Filter -> Filter : Extract kid
+Filter -> Cache : get(kid)
+activate Cache
+alt Cache Miss
+  Cache --> Filter : null
+  Filter -> Keycloak : Fetch JWKS (jwkSetUri)
+  activate Keycloak
+  Keycloak --> Filter : JWKS JSON (keys list)
+  deactivate Keycloak
+  Filter -> Filter : Parse RSA Public Keys
+  Filter -> Cache : put parsed keys
+else Cache Hit
+  Cache --> Filter : PublicKey
+  deactivate Cache
+end
+
+Filter -> Filter : Jwts.parser().verifyWith(key).parseClaims(token)
+
+Filter -> Filter : Extract username, tenantId, roles
+
+Filter -> Engine : getMetadata(resource)
+activate Engine
+Engine --> Filter : ResourceMetadata
+deactivate Engine
+
+Filter -> Filter : Check roles validation
+alt Unauthorized
+  Filter --> [ : Return 403 Forbidden
+end
+
+Filter -> Filter : Create UsernamePasswordAuthenticationToken
+Filter -> Filter : contextWrite(tenantId, username, Authentication)
+Filter -> [ : pass request (chain.filter)
+deactivate Filter
+@enduml

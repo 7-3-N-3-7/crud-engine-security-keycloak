@@ -1,0 +1,35 @@
+@startuml Keycloak Class Diagram
+skinparam classAttributeIconSize 0
+
+package org.springframework.web.server {
+  interface WebFilter {
+    + filter(ServerWebExchange, WebFilterChain): Mono<Void>
+  }
+}
+
+package com.org73n37.crudapp.infrastructure.security {
+  class ReactiveJwtFilter implements WebFilter {
+    - String jwkSetUri
+    - String testPublicKeyPem
+    - CrudEngine crudManager
+    - ObjectMapper objectMapper
+    - AppModeConfig appModeConfig
+    - Map<String, PublicKey> jwkCache
+    - PublicKey parsedTestPublicKey
+    + filter(ServerWebExchange, WebFilterChain): Mono<Void>
+    - getResourceName(String): String
+    - getVerificationKey(String): PublicKey
+    - extractKid(String): String
+    - parsePemPublicKey(String): PublicKey
+    - fetchJwks(): void
+  }
+  
+  class SecurityConfig {
+  }
+  
+  class SecurityAuditorAware {
+  }
+}
+
+ReactiveJwtFilter --> com.org73n37.crudapp.logic.CrudEngine : "looks up metadata"
+@enduml

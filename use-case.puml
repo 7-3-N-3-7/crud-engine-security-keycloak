@@ -1,0 +1,23 @@
+@startuml Keycloak Use Cases
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Client App" as client
+actor "Keycloak IAM" as keycloak
+
+rectangle "crud-engine-security-keycloak" {
+  usecase "Authenticate REST Request (Validate JWT)" as UC_Auth
+  usecase "Fetch JWK Signing Keys dynamically" as UC_FetchJwk
+  usecase "Extract Realm Roles & Tenant ID" as UC_ExtractClaims
+  usecase "Check Endpoint Privileges (RBAC)" as UC_Rbac
+  usecase "Propagate SecurityContext to Reactive Context" as UC_Propagate
+}
+
+client --> UC_Auth
+UC_Auth ..> UC_FetchJwk : <<include>>
+UC_Auth ..> UC_ExtractClaims : <<include>>
+UC_Auth ..> UC_Rbac : <<include>>
+UC_Auth ..> UC_Propagate : <<include>>
+
+keycloak --> UC_FetchJwk
+@enduml
