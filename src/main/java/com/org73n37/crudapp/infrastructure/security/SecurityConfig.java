@@ -19,6 +19,8 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
+                // codeql[java/spring-disabled-csrf-protection]
+                // CSRF is disabled because this is a stateless REST API using JWT (without session cookies)
                 .csrf(csrf -> csrf.disable())
                 .authorizeExchange(exchanges -> exchanges
                         .anyExchange().permitAll()
