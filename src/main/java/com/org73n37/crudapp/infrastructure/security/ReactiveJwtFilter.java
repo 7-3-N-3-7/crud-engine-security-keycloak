@@ -167,6 +167,7 @@ public class ReactiveJwtFilter implements WebFilter {
                         if (!authorized) {
                             log.warn("[SECURITY EVENT] Action=ACCESS_DENIED Resource={} User={} Tenant={} Reason=Insufficient privileges", resource, username, tenant);
                             exchange.getResponse().setRawStatusCode(403);
+                            exchange.getResponse().getHeaders().add("Access-Control-Allow-Origin", "*");
                             return exchange.getResponse().writeWith(Mono.just(
                                 exchange.getResponse().bufferFactory().wrap("Forbidden: Insufficient privileges".getBytes(StandardCharsets.UTF_8))
                             ));
