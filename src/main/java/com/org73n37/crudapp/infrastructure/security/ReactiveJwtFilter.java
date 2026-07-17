@@ -97,6 +97,7 @@ public class ReactiveJwtFilter implements WebFilter {
             if (verificationKey == null) {
                 log.warn("[SECURITY EVENT] Action=AUTHENTICATION_FAILURE Path={} Reason=Signing key not found for token verification", path);
                 exchange.getResponse().setRawStatusCode(401);
+                exchange.getResponse().getHeaders().add("Access-Control-Allow-Origin", "*");
                 return exchange.getResponse().writeWith(Mono.just(
                     exchange.getResponse().bufferFactory().wrap("Signing key not found for token verification".getBytes(StandardCharsets.UTF_8))
                 ));
@@ -189,8 +190,8 @@ public class ReactiveJwtFilter implements WebFilter {
  
         } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
             log.warn("[SECURITY EVENT] Action=AUTHENTICATION_FAILURE Path={} Reason={}", path, e.getMessage());
-            log.debug("Token verification failure details", e);
             exchange.getResponse().setRawStatusCode(401);
+            exchange.getResponse().getHeaders().add("Access-Control-Allow-Origin", "*");
             return exchange.getResponse().writeWith(Mono.just(
                 exchange.getResponse().bufferFactory().wrap(("Invalid token: " + e.getMessage()).getBytes(StandardCharsets.UTF_8))
             ));
