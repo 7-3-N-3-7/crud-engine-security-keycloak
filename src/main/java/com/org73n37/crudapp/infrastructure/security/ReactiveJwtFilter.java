@@ -78,7 +78,7 @@ public class ReactiveJwtFilter implements WebFilter {
         if (path.equals("/dashboard") || path.startsWith("/dashboard/") ||
             path.startsWith("/css/") || path.startsWith("/js/") ||
             path.equals("/favicon.ico") || path.endsWith(".css") || path.endsWith(".svg") ||
-            path.equals("/api/metadata") || path.startsWith("/health/") || path.equals("/swagger-ui") || path.equals("/api-docs")) {
+            path.equals("/api/translations") || path.equals("/api/metadata") || path.startsWith("/health/") || path.equals("/swagger-ui") || path.equals("/api-docs")) {
             return chain.filter(exchange);
         }
 
