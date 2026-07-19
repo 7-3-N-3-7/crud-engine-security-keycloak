@@ -80,7 +80,7 @@ public class ReactiveJwtFilter implements WebFilter {
             path.equals("/favicon.ico") || path.endsWith(".css") || path.endsWith(".svg") ||
             path.equals("/api/translations") || path.equals("/api/metadata") || 
             path.startsWith("/health/") || path.startsWith("/actuator/") || 
-            path.equals("/swagger-ui") || path.equals("/api-docs")) {
+            path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
             return chain.filter(exchange);
         }
 
